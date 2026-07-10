@@ -10,7 +10,7 @@ This project is a Spring Boot microservices setup with Eureka service discovery 
 | API Gateway | 8083 | Entry point for routed requests |
 | Property Service | 8084 | Property-related operations |
 | Booking Service | 8085 | Booking-related operations |
-| User Service | 8086 | User-related operations |
+| User Service | 8090 | User-related operations |
 
 ## Project Structure
 
