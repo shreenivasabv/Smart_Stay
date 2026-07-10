@@ -1,2 +1,6 @@
-com\smartstay\user_service\UserServiceApplication.class
+com\smartstay\user_service\entity\User.class
+com\smartstay\user_service\service\UserService.class
+com\smartstay\user_service\repository\UserRepository.class
 com\smartstay\user_service\TestController.class
+com\smartstay\user_service\controller\UserController.class
+com\smartstay\user_service\UserServiceApplication.class
