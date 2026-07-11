@@ -7,3 +7,4 @@ com\smartstay\user_service\TestController.class
 com\smartstay\user_service\controller\UserController.class
 com\smartstay\user_service\UserServiceApplication.class
 com\smartstay\user_service\security\JwtUtil.class
+com\smartstay\user_service\config\CorsConfig.class

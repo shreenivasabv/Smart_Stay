@@ -6,4 +6,5 @@ C:\Users\shreenivasa\Documents\Booking MicroService\user-service\src\main\java\c
 C:\Users\shreenivasa\Documents\Booking MicroService\user-service\src\main\java\com\smartstay\user_service\controller\UserController.java
 C:\Users\shreenivasa\Documents\Booking MicroService\user-service\src\main\java\com\smartstay\security\JwtFilter.java
 C:\Users\shreenivasa\Documents\Booking MicroService\user-service\src\main\java\com\smartstay\user_service\repository\UserRepository.java
+C:\Users\shreenivasa\Documents\Booking MicroService\user-service\src\main\java\com\smartstay\user_service\config\CorsConfig.java
 C:\Users\shreenivasa\Documents\Booking MicroService\user-service\src\main\java\com\smartstay\user_service\TestController.java

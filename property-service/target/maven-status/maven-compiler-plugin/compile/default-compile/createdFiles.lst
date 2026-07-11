@@ -1,6 +1,9 @@
 com\smartstay\property_user\service\PropertyService.class
+com\smartstay\property_user\controller\RecommendationController.class
+com\smartstay\property_user\config\CorsConfig.class
 com\smartstay\property_user\TestController.class
 com\smartstay\property_user\PropertyUserApplication.class
 com\smartstay\property_user\repository\PropertyRepository.class
 com\smartstay\property_user\controller\PropertyController.class
 com\smartstay\property_user\entity\Property.class
+com\smartstay\property_user\service\RecommendationService.class

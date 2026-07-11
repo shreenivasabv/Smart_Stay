@@ -1,0 +1,116 @@
+version: '3.8'
+
+services:
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: shreenivasa
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - smartstay-network
+
+  # RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - smartstay-network
+
+  # Eureka Server
+  eureka-server:
+    build: ./eureka-server
+    container_name: eureka-server
+    ports:
+      - "8762:8762"
+    networks:
+      - smartstay-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8762/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # API Gateway
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - "8083:8083"
+    depends_on:
+      - eureka-server
+    environment:
+      - eureka.client.service-url.defaultZone=http://eureka-server:8762/eureka/
+    networks:
+      - smartstay-network
+
+  # User Service
+  user-service:
+    build: ./user-service
+    container_name: user-service
+    ports:
+      - "8090:8090"
+    depends_on:
+      - postgres
+      - eureka-server
+    environment:
+      - spring.datasource.url=jdbc:postgresql://postgres:5432/user_db
+      - spring.datasource.username=postgres
+      - spring.datasource.password=shreenivasa
+      - eureka.client.service-url.defaultZone=http://eureka-server:8762/eureka/
+      - jwt.secret=5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437
+      - jwt.expiration=86400000
+    networks:
+      - smartstay-network
+
+  # Property Service
+  property-service:
+    build: ./property-service
+    container_name: property-service
+    ports:
+      - "8084:8084"
+    depends_on:
+      - postgres
+      - eureka-server
+    environment:
+      - spring.datasource.url=jdbc:postgresql://postgres:5432/property_db
+      - spring.datasource.username=postgres
+      - spring.datasource.password=shreenivasa
+      - eureka.client.service-url.defaultZone=http://eureka-server:8762/eureka/
+    networks:
+      - smartstay-network
+
+  # Booking Service
+  booking-service:
+    build: ./booking-service
+    container_name: booking-service
+    ports:
+      - "8088:8088"
+    depends_on:
+      - postgres
+      - eureka-server
+      - rabbitmq
+    environment:
+      - spring.datasource.url=jdbc:postgresql://postgres:5432/booking_db
+      - spring.datasource.username=postgres
+      - spring.datasource.password=shreenivasa
+      - eureka.client.service-url.defaultZone=http://eureka-server:8762/eureka/
+      - spring.rabbitmq.host=rabbitmq
+    networks:
+      - smartstay-network
+
+networks:
+  smartstay-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
