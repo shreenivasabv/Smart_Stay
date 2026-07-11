@@ -2,5 +2,9 @@ C:\Users\shreenivasa\Documents\Booking MicroService\booking-service\src\main\jav
 C:\Users\shreenivasa\Documents\Booking MicroService\booking-service\src\main\java\com\smartstay\booking_service\BookingServiceApplication.java
 C:\Users\shreenivasa\Documents\Booking MicroService\booking-service\src\main\java\com\smartstay\booking_service\controller\BookingController.java
 C:\Users\shreenivasa\Documents\Booking MicroService\booking-service\src\main\java\com\smartstay\booking_service\entity\Booking.java
+C:\Users\shreenivasa\Documents\Booking MicroService\booking-service\src\main\java\com\smartstay\booking_service\config\RabbitMQConfig.java
 C:\Users\shreenivasa\Documents\Booking MicroService\booking-service\src\main\java\com\smartstay\booking_service\TestController.java
+C:\Users\shreenivasa\Documents\Booking MicroService\booking-service\src\main\java\com\smartstay\booking_service\messaging\BookingConsumer.java
+C:\Users\shreenivasa\Documents\Booking MicroService\booking-service\src\main\java\event\BookingEvent.java
+C:\Users\shreenivasa\Documents\Booking MicroService\booking-service\src\main\java\com\smartstay\booking_service\messaging\BookingProducer.java
 C:\Users\shreenivasa\Documents\Booking MicroService\booking-service\src\main\java\com\smartstay\booking_service\repository\BookingRepository.java

@@ -2,5 +2,9 @@ com\smartstay\booking_service\entity\Booking.class
 com\smartstay\booking_service\repository\BookingRepository.class
 com\smartstay\booking_service\BookingServiceApplication.class
 com\smartstay\booking_service\service\BookingService.class
+com\smartstay\booking_service\config\RabbitMQConfig.class
+com\smartstay\booking_service\event\BookingEvent.class
 com\smartstay\booking_service\controller\BookingController.class
+com\smartstay\booking_service\messaging\BookingConsumer.class
+com\smartstay\booking_service\messaging\BookingProducer.class
 com\smartstay\booking_service\TestController.class

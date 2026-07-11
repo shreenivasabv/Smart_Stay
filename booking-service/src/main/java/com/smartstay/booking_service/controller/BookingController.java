@@ -17,8 +17,12 @@ public class BookingController {
     }
 
     @PostMapping
-    public ResponseEntity<Booking> createBooking(@RequestBody Booking booking) {
-        return ResponseEntity.ok(bookingService.createBooking(booking));
+    public ResponseEntity<?> createBooking(@RequestBody Booking booking) {
+        try {
+            return ResponseEntity.ok(bookingService.createBooking(booking));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping
@@ -44,7 +48,11 @@ public class BookingController {
     }
 
     @PutMapping("/{id}/cancel")
-    public ResponseEntity<Booking> cancelBooking(@PathVariable Long id) {
-        return ResponseEntity.ok(bookingService.cancelBooking(id));
+    public ResponseEntity<?> cancelBooking(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(bookingService.cancelBooking(id));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
