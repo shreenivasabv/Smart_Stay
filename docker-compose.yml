@@ -2,7 +2,6 @@ version: '3.8'
 
 services:
 
-  # PostgreSQL Database
   postgres:
     image: postgres:16
     container_name: postgres
@@ -13,10 +12,28 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
     networks:
       - smartstay-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # RabbitMQ
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - smartstay-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
@@ -25,8 +42,12 @@ services:
       - "15672:15672"
     networks:
       - smartstay-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # Eureka Server
   eureka-server:
     build: ./eureka-server
     container_name: eureka-server
@@ -35,78 +56,105 @@ services:
     networks:
       - smartstay-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8762/actuator/health"]
-      interval: 30s
+      test: ["CMD-SHELL", "curl -f http://localhost:8762/actuator/health || exit 1"]
+      interval: 15s
       timeout: 10s
-      retries: 5
+      retries: 10
+      start_period: 40s
 
-  # API Gateway
   api-gateway:
     build: ./api-gateway
     container_name: api-gateway
     ports:
       - "8083:8083"
     depends_on:
-      - eureka-server
+      eureka-server:
+        condition: service_healthy
     environment:
       - eureka.client.service-url.defaultZone=http://eureka-server:8762/eureka/
     networks:
       - smartstay-network
+    restart: on-failure
 
-  # User Service
   user-service:
     build: ./user-service
     container_name: user-service
     ports:
       - "8090:8090"
     depends_on:
-      - postgres
-      - eureka-server
+      postgres:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
       - spring.datasource.url=jdbc:postgresql://postgres:5432/user_db
+      - spring.datasource.driver-class-name=org.postgresql.Driver
       - spring.datasource.username=postgres
       - spring.datasource.password=shreenivasa
+      - spring.jpa.hibernate.ddl-auto=update
       - eureka.client.service-url.defaultZone=http://eureka-server:8762/eureka/
       - jwt.secret=5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437
       - jwt.expiration=86400000
+      - spring.data.redis.host=redis
+      - spring.data.redis.port=6379
     networks:
       - smartstay-network
+    restart: on-failure
 
-  # Property Service
   property-service:
     build: ./property-service
     container_name: property-service
     ports:
       - "8084:8084"
     depends_on:
-      - postgres
-      - eureka-server
+      postgres:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
       - spring.datasource.url=jdbc:postgresql://postgres:5432/property_db
+      - spring.datasource.driver-class-name=org.postgresql.Driver
       - spring.datasource.username=postgres
       - spring.datasource.password=shreenivasa
+      - spring.jpa.hibernate.ddl-auto=update
       - eureka.client.service-url.defaultZone=http://eureka-server:8762/eureka/
+      - spring.data.redis.host=redis
+      - spring.data.redis.port=6379
+      - spring.cache.type=redis
     networks:
       - smartstay-network
+    restart: on-failure
 
-  # Booking Service
   booking-service:
     build: ./booking-service
     container_name: booking-service
     ports:
       - "8088:8088"
     depends_on:
-      - postgres
-      - eureka-server
-      - rabbitmq
+      postgres:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     environment:
       - spring.datasource.url=jdbc:postgresql://postgres:5432/booking_db
+      - spring.datasource.driver-class-name=org.postgresql.Driver
       - spring.datasource.username=postgres
       - spring.datasource.password=shreenivasa
+      - spring.jpa.hibernate.ddl-auto=update
       - eureka.client.service-url.defaultZone=http://eureka-server:8762/eureka/
       - spring.rabbitmq.host=rabbitmq
+      - spring.rabbitmq.port=5672
+      - spring.rabbitmq.username=guest
+      - spring.rabbitmq.password=guest
     networks:
       - smartstay-network
+    restart: on-failure
 
 networks:
   smartstay-network:

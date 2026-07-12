@@ -1,15 +1,13 @@
 package com.smartstay.property_user.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "properties")
-public class Property {
+public class Property implements Serializable {  // ← Add this!
+
+    private static final long serialVersionUID = 1L;  // ← Add this!
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +21,7 @@ public class Property {
     private String propertyType;
     private Boolean available;
 
+    // All getters and setters same as before...
     public Long getId() { return id; }
     public String getName() { return name; }
     public String getLocation() { return location; }
@@ -36,8 +35,8 @@ public class Property {
     public void setName(String name) { this.name = name; }
     public void setLocation(String location) { this.location = location; }
     public void setDescription(String description) { this.description = description; }
-    public void setPricePerNight(Double pricePerNight) { this.pricePerNight = pricePerNight; }
-    public void setTotalRooms(Integer totalRooms) { this.totalRooms = totalRooms; }
-    public void setPropertyType(String propertyType) { this.propertyType = propertyType; }
+    public void setPricePerNight(Double price) { this.pricePerNight = price; }
+    public void setTotalRooms(Integer rooms) { this.totalRooms = rooms; }
+    public void setPropertyType(String type) { this.propertyType = type; }
     public void setAvailable(Boolean available) { this.available = available; }
 }

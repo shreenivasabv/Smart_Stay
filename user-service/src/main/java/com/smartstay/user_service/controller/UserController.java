@@ -44,6 +44,18 @@ public class UserController {
                 .orElse(ResponseEntity.status(401).build());
     }
 
+    // POST /users/logout
+            @PostMapping("/logout")
+            public ResponseEntity<String> logout(
+                    @RequestHeader("Authorization") String authHeader) {
+                if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                    String token = authHeader.substring(7);
+                    jwtUtil.invalidateToken(token);
+                    return ResponseEntity.ok("Logged out successfully!");
+                }
+                return ResponseEntity.badRequest().body("Invalid token!");
+            }
+
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
