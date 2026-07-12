@@ -66,4 +66,4 @@ mvn spring-boot:run
 
 - The services use H2 in-memory databases for local development.
 - Eureka registration is enabled for the microservices.
-- The gateway can discover services through Eureka.
+- The gateway can discover services through Eureka
